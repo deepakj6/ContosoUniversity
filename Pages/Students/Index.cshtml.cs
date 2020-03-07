@@ -23,17 +23,36 @@ namespace ContosoUniversity.Pages_Students
         public string CurrentFilter { get; set; }
         public string CurrentSort { get; set; }
 
-        public IList<Student> Student { get; set; }
+        public PaginatedList<Student> Student { get; set; }
 
-        public async Task OnGetAsync(string sortOrder)
+        public async Task OnGetAsync(string sortOrder,
+        string currentFilter, string searchString, int? pageIndex)
         {
+            CurrentSort = sortOrder;
             NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            DateSort = sortOrder == "Date" ? "date_desc" : "Date";           
+            DateSort = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                pageIndex = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+
+            CurrentFilter = searchString;
 
             IQueryable<Student> studentIQ =
-            from s in _context.Student            
+            from s in _context.Student
             select s;
 
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                studentIQ = studentIQ.Where(s => s.LastName.Contains(searchString)
+                                       || s.FirstMidName.Contains(searchString));
+            }
             switch (sortOrder)
             {
                 case "name_desc":
@@ -49,7 +68,10 @@ namespace ContosoUniversity.Pages_Students
                     studentIQ = studentIQ.OrderBy(s => s.LastName);
                     break;
             }
-            Student = await studentIQ.AsNoTracking().ToListAsync();
+            int pageSize = 3;
+            //Student = await studentIQ.AsNoTracking().ToListAsync();
+            Student = await PaginatedList<Student>.CreateAsync(
+                studentIQ.AsNoTracking(), pageIndex ?? 1, pageSize);
         }
     }
 }
