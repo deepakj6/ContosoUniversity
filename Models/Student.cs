@@ -5,13 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContosoUniversity.Models
 {
+    [Table("Student")]
     public class Student
     {
+        [Column("ID")]
         public int ID { get; set; }
 
         [Required]
         [StringLength(50)]
         [Display(Name = "Last Name")]
+        [Column("LastName")]
         public string LastName { get; set; }
 
         [Required]
@@ -23,6 +26,7 @@ namespace ContosoUniversity.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Enrollment Date")]
+        [Column("EnrollmentDate")]
         public DateTime EnrollmentDate { get; set; }
 
         [Display(Name = "Full Name")]

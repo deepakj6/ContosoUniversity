@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using ContosoUniversity.Models;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
 
 namespace ContosoUniversity
 {
@@ -34,10 +36,25 @@ namespace ContosoUniversity
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<SchoolContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("SchoolContext")));
+            #region Use this for SQL SERVER locally
+            /*            services.AddDbContext<SchoolContext>(options =>
+                                options.UseSqlServer(Configuration.GetConnectionString("SchoolContext")));*/
+            #endregion
+
+            #region Use this for MYSQL connection string on PAS/PWS
+            services.AddDbContext<SchoolContext>(options => options.UseMySql(Configuration));
+            #endregion
+
+            #region Use this for MYSQL connection string locally
+/*            var conString = "Server=localhost;Database=contoso;User=root;";
+
+            services.AddDbContext<SchoolContext>(options => options.UseMySql(
+                conString,
+                mySqlOptions => mySqlOptions.ServerVersion(new Version(5, 7, 18), ServerType.MySql)
+                ));*/
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

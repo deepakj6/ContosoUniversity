@@ -8,13 +8,20 @@ namespace ContosoUniversity.Models
         A, B, C, D, F
     }
 
+    [Table("Enrollment")]
     public class Enrollment
     {
+        [Column("EnrollmentID")]
         public int EnrollmentID { get; set; }
+
+        [Column("CourseID")]
         public int CourseID { get; set; }
+
+        [Column("StudentID")]
         public int StudentID { get; set; }
 
         [DisplayFormat(NullDisplayText = "No grade")]
+        [Column("Grade")]
         public Grade? Grade { get; set; }
 
         public Course Course { get; set; }

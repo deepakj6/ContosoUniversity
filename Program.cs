@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Steeltoe.Extensions.Configuration.CloudFoundry;
 
 namespace ContosoUniversity
 {
@@ -40,6 +41,7 @@ namespace ContosoUniversity
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration(config => config.AddCloudFoundry())
                 .UseStartup<Startup>();
     }
 }
